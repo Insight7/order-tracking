@@ -23,16 +23,10 @@ import java.sql.Timestamp;
 @ToString
 public class Tracking {
 
-    public static enum TRACKING_STATUS {TRACKING_STATUS, IN_TRANSIT, DELIVERED};
-
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private TRACKING_STATUS status;
 
     @Column(name = "UPDATE_TIME")
     private Timestamp updateTime;

@@ -6,6 +6,8 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,8 @@ import java.sql.Timestamp;
 @ToString
 public class Order {
 
+    public static enum ORDER_STATUS {ORDERED, IN_TRANSIT, DELIVERED};
+
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -29,6 +33,10 @@ public class Order {
 
     @Column(name = "DESTINATION")
     private String destination;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ORDER_STATUS status;
 
     @Column(name = "DELIVERY_TIME")
     private Timestamp deliveryTime;
