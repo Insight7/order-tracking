@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 
+import static com.insight7.ordertracking.controller.models.OrderStatus.fromDbOrderStatus;
+
 @Getter
 @Setter
 @Entity
@@ -21,7 +23,7 @@ import java.sql.Timestamp;
 @ToString
 public class Order {
 
-    public static enum ORDER_STATUS {ORDERED, IN_TRANSIT, DELIVERED};
+    public static enum ORDER_STATUS {PLACED, DECLINED , IN_TRANSIT, DELIVERED};
 
     @Id
     @Column(name = "ID")
@@ -45,7 +47,7 @@ public class Order {
     private Integer noOfPkgs;
 
     @Column(name = "WEIGHT")
-    private Integer WEIGHT;
+    private Integer weight;
 
     @Column(name = "VOLUME")
     private Integer volume;

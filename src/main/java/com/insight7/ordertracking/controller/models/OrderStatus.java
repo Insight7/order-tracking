@@ -1,9 +1,11 @@
 package com.insight7.ordertracking.controller.models;
 
+import com.insight7.ordertracking.persistence.models.Order;
+
 public enum OrderStatus {
 
     PLACED("PLACED"),
-    APPROVED("APPROVED"),
+    DECLINED("DECLINED"),
     IN_TRANSIT("IN_TRANSIT"),
     DELIVERED("DELIVERED");
 
@@ -15,5 +17,35 @@ public enum OrderStatus {
 
     @Override
     public String toString(){return this.value;}
+
+    public static OrderStatus fromDbOrderStatus(Order.ORDER_STATUS status) {
+        switch (status.name()){
+            case "PLACED" :
+                return PLACED;
+            case "DECLINED" :
+                return DECLINED;
+            case "IN_TRANSIT" :
+                return IN_TRANSIT;
+            case "DELIVERED" :
+                return DELIVERED;
+            default:
+                return null;
+        }
+    }
+
+    public Order.ORDER_STATUS toDbOrderStatus() {
+        switch (this.toString()){
+            case "PLACED" :
+                return Order.ORDER_STATUS.PLACED;
+            case "DECLINED" :
+                return Order.ORDER_STATUS.DECLINED;
+            case "IN_TRANSIT" :
+                return Order.ORDER_STATUS.IN_TRANSIT;
+            case "DELIVERED" :
+                return Order.ORDER_STATUS.DELIVERED;
+            default:
+                return null;
+        }
+    }
 
 }
