@@ -1,7 +1,7 @@
 package com.insight7.ordertracking.controller;
 
 import com.insight7.ordertracking.TestOrderTrackingApplication;
-import com.insight7.ordertracking.controller.models.Order;
+import com.insight7.ordertracking.controller.models.OrderResponse;
 import com.insight7.ordertracking.controller.models.OrderStatus;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -24,8 +24,6 @@ import static io.restassured.path.json.JsonPath.from;
 public class OrderControllerIT {
 
     private static final Logger log = LoggerFactory.getLogger(OrderControllerIT.class);
-
-
     private static final String BASE_ORDER_URL = "/orders";
     private static final String ORDER_BY_ID = BASE_ORDER_URL+"/%s";
 
@@ -52,15 +50,15 @@ public class OrderControllerIT {
                 .statusCode(200)
                 .extract()
                 .response();
-        Order order = from(response.asString()).getObject("",Order.class);
-        Assertions.assertEquals(order.getSource(),"Bangalore","Order.source compare");
-        Assertions.assertEquals(order.getDestination(),"Delhi","Order.destination compare");
-        Assertions.assertEquals(order.getStatus(), OrderStatus.PLACED,"Order.status compare");
-        Assertions.assertEquals(order.getNoOfPkgs(),2,"Order.noOfPkgs compare");
-        Assertions.assertEquals(order.getWeight(),40,"Order.weight compare");
-        Assertions.assertEquals(order.getVolume(),1000,"Order.volume compare");
-        Assertions.assertNotNull(order.getId(),"Order.id not null");
-        Assertions.assertNotNull(order.getCreateTime(),"Order.creationTime not null");
+        OrderResponse orderResponse = from(response.asString()).getObject("", OrderResponse.class);
+        Assertions.assertEquals(orderResponse.getSource(),"Bangalore","Order.source compare");
+        Assertions.assertEquals(orderResponse.getDestination(),"Delhi","Order.destination compare");
+        Assertions.assertEquals(orderResponse.getStatus(), OrderStatus.PLACED,"Order.status compare");
+        Assertions.assertEquals(orderResponse.getNoOfPkgs(),2,"Order.noOfPkgs compare");
+        Assertions.assertEquals(orderResponse.getWeight(),40,"Order.weight compare");
+        Assertions.assertEquals(orderResponse.getVolume(),1000,"Order.volume compare");
+        Assertions.assertNotNull(orderResponse.getId(),"Order.id not null");
+        Assertions.assertNotNull(orderResponse.getCreateTime(),"Order.creationTime not null");
 
         // without source
         given()
@@ -133,15 +131,15 @@ public class OrderControllerIT {
                 .statusCode(200)
                 .extract()
                 .response();
-        order = from(response.asString()).getObject("",Order.class);
-        Assertions.assertEquals(order.getSource(),"Bangalore","Order.source compare");
-        Assertions.assertEquals(order.getDestination(),"Delhi","Order.destination compare");
-        Assertions.assertEquals(order.getStatus(), OrderStatus.PLACED,"Order.status compare");
-        Assertions.assertEquals(order.getNoOfPkgs(),2,"Order.noOfPkgs compare");
-        Assertions.assertNull(order.getWeight(), "Order.weight compare");
-        Assertions.assertEquals(order.getVolume(),1000,"Order.volume compare");
-        Assertions.assertNotNull(order.getId(),"Order.id not null");
-        Assertions.assertNotNull(order.getCreateTime(),"Order.creationTime not null");
+        orderResponse = from(response.asString()).getObject("", OrderResponse.class);
+        Assertions.assertEquals(orderResponse.getSource(),"Bangalore","Order.source compare");
+        Assertions.assertEquals(orderResponse.getDestination(),"Delhi","Order.destination compare");
+        Assertions.assertEquals(orderResponse.getStatus(), OrderStatus.PLACED,"Order.status compare");
+        Assertions.assertEquals(orderResponse.getNoOfPkgs(),2,"Order.noOfPkgs compare");
+        Assertions.assertNull(orderResponse.getWeight(), "Order.weight compare");
+        Assertions.assertEquals(orderResponse.getVolume(),1000,"Order.volume compare");
+        Assertions.assertNotNull(orderResponse.getId(),"Order.id not null");
+        Assertions.assertNotNull(orderResponse.getCreateTime(),"Order.creationTime not null");
 
         //without volume
         response = given()
@@ -154,15 +152,15 @@ public class OrderControllerIT {
                 .statusCode(200)
                 .extract()
                 .response();
-        order = from(response.asString()).getObject("",Order.class);
-        Assertions.assertEquals(order.getSource(),"Bangalore","Order.source compare");
-        Assertions.assertEquals(order.getDestination(),"Delhi","Order.destination compare");
-        Assertions.assertEquals(order.getStatus(), OrderStatus.PLACED,"Order.status compare");
-        Assertions.assertEquals(order.getNoOfPkgs(),2,"Order.noOfPkgs compare");
-        Assertions.assertEquals(order.getWeight(),40,"Order.weight compare");
-        Assertions.assertNull(order.getVolume(), "Order.volume compare");
-        Assertions.assertNotNull(order.getId(),"Order.id not null");
-        Assertions.assertNotNull(order.getCreateTime(),"Order.creationTime not null");
+        orderResponse = from(response.asString()).getObject("", OrderResponse.class);
+        Assertions.assertEquals(orderResponse.getSource(),"Bangalore","Order.source compare");
+        Assertions.assertEquals(orderResponse.getDestination(),"Delhi","Order.destination compare");
+        Assertions.assertEquals(orderResponse.getStatus(), OrderStatus.PLACED,"Order.status compare");
+        Assertions.assertEquals(orderResponse.getNoOfPkgs(),2,"Order.noOfPkgs compare");
+        Assertions.assertEquals(orderResponse.getWeight(),40,"Order.weight compare");
+        Assertions.assertNull(orderResponse.getVolume(), "Order.volume compare");
+        Assertions.assertNotNull(orderResponse.getId(),"Order.id not null");
+        Assertions.assertNotNull(orderResponse.getCreateTime(),"Order.creationTime not null");
     }
 
     @Test
@@ -178,7 +176,7 @@ public class OrderControllerIT {
 
     @Test
     public void getOrderByIdTest(){
-        Order order = createOrder("Bangalore", "Delhi", 1);
+        OrderResponse order = createOrder("Bangalore", "Delhi", 1);
         Response response = given()
                 .contentType(ContentType.JSON)
                 .when()
@@ -186,7 +184,7 @@ public class OrderControllerIT {
                 .then()
                 .statusCode(200)
                 .extract().response();
-        Order orderResponse = from(response.asString()).getObject("",Order.class);
+        OrderResponse orderResponse = from(response.asString()).getObject("", OrderResponse.class);
         assertOrder(order,orderResponse);
 
         // not found
@@ -208,14 +206,14 @@ public class OrderControllerIT {
     @Test
     public void updateOrderTest(){
         // test flow PLACED --> DECLINED
-        Order order = createOrder("Mumbai", "West Bengal", 5);
+        OrderResponse orderResponse = createOrder("Mumbai", "West Bengal", 5);
 
         given()
                 .header("Content-type", "application/json")
                 .and()
                 .body("{\"destination\":\"Goa\",\"status\":\"DELIVERED\"}")
                 .when()
-                .put(String.format(ORDER_BY_ID,order.getId()))
+                .put(String.format(ORDER_BY_ID, orderResponse.getId()))
                 .then()
                 .statusCode(400); // bad request
 
@@ -224,24 +222,24 @@ public class OrderControllerIT {
                 .and()
                 .body("{\"destination\":\"Goa\",\"status\":\"DECLINED\"}")
                 .when()
-                .put(String.format(ORDER_BY_ID,order.getId()))
+                .put(String.format(ORDER_BY_ID, orderResponse.getId()))
                 .then()
                 .statusCode(200)
-                .extract().response();;
+                .extract().response();
 
-        Order declinedOrder = from(response.asString()).getObject("",Order.class);
-        Assertions.assertEquals(order.getId(),declinedOrder.getId(),"Order.id compare");
-        Assertions.assertEquals(OrderStatus.DECLINED,declinedOrder.getStatus(),"Order.status declined compare");
+        OrderResponse declinedOrderResponse = from(response.asString()).getObject("", OrderResponse.class);
+        Assertions.assertEquals(orderResponse.getId(), declinedOrderResponse.getId(),"Order.id compare");
+        Assertions.assertEquals(OrderStatus.DECLINED, declinedOrderResponse.getStatus(),"Order.status declined compare");
 
         // test flow PLACED --> IN_TRANSIT --> DELIVERED
 
-        order = createOrder("Mumbai", "West Bengal", 5);
+        orderResponse = createOrder("Mumbai", "West Bengal", 5);
 
     }
 
     @Test
     public void deleteOrderTest(){
-        Order order = createOrder("Delhi", "Bangalore", 2);
+        OrderResponse orderResponse = createOrder("Delhi", "Bangalore", 2);
 
         // not found
         given()
@@ -260,32 +258,32 @@ public class OrderControllerIT {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete(String.format(ORDER_BY_ID,order.getId()))
+                .delete(String.format(ORDER_BY_ID, orderResponse.getId()))
                 .then()
                 .statusCode(200)
                 .extract().response();
     }
 
-    private Order createOrder(String source, String destination, Integer noOfPkgs){
+    private OrderResponse createOrder(String source, String destination, Integer noOfPkgs){
         Response response = given()
                 .header("Content-type", "application/json")
                 .and()
-                .body(String.format("{\"source\":\"%s\",\"destination\":\"%s\",\"noOfPkgs\":%d,\"}",source,destination,noOfPkgs))
+                .body(String.format("{\"source\":\"%s\",\"destination\":\"%s\",\"noOfPkgs\":%d}",source,destination,noOfPkgs))
                 .when()
                 .post(BASE_ORDER_URL)
                 .then()
                 .statusCode(200)
                 .extract()
                 .response();
-        Order order = from(response.asString()).getObject("",Order.class);
-        Assertions.assertEquals(order.getSource(),source,"Order.source compare");
-        Assertions.assertEquals(order.getDestination(),destination,"Order.destination compare");
-        Assertions.assertEquals(order.getStatus(), OrderStatus.PLACED,"Order.status compare");
-        Assertions.assertEquals(order.getNoOfPkgs(),noOfPkgs,"Order.noOfPkgs compare");
-        return order;
+        OrderResponse orderResponse = from(response.asString()).getObject("", OrderResponse.class);
+        Assertions.assertEquals(orderResponse.getSource(),source,"Order.source compare");
+        Assertions.assertEquals(orderResponse.getDestination(),destination,"Order.destination compare");
+        Assertions.assertEquals(orderResponse.getStatus(), OrderStatus.PLACED,"Order.status compare");
+        Assertions.assertEquals(orderResponse.getNoOfPkgs(),noOfPkgs,"Order.noOfPkgs compare");
+        return orderResponse;
     }
 
-    private void assertOrder(Order expected,Order actual ){
+    private void assertOrder(OrderResponse expected, OrderResponse actual ){
         Assertions.assertEquals(expected.getSource(),actual.getSource(),"Order.source compare");
         Assertions.assertEquals(expected.getDestination(),actual.getDestination(),"Order.destination compare");
         Assertions.assertEquals(expected.getStatus(), actual.getStatus(),"Order.status compare");

@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Orders {
+public class OrdersResponse {
     private Pagination pagination;
-    private List<Order> items;
+    private List<OrderResponse> items;
 }

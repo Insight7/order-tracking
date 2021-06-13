@@ -6,12 +6,9 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
@@ -19,13 +16,13 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "TRACKING", schema="public")
+@Table(name = "TRACKING", schema = "public")
 @ToString
 public class Tracking {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(name = "UPDATE_TIME")
