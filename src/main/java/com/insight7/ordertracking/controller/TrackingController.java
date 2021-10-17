@@ -10,6 +10,7 @@ import com.insight7.ordertracking.service.TrackingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +66,10 @@ public class TrackingController {
 
     @DeleteMapping("/tracking/{orderId}/{trackingId}")
     public MessageResponse deleteTracking(@PathVariable Integer orderId, @PathVariable Integer trackingId) {
-        //TODO: implement this method
-        return null;
+        service.deleteTrackingAndOrderById(orderId,trackingId);
+        return MessageResponse.builder()
+                .statusCode(HttpStatus.OK.toString())
+                .message(String.format("Order with orderId = %s and trackingId is deleted.", orderId, trackingId))
+                .build();
     }
 }

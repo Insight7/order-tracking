@@ -1,4 +1,5 @@
-
+# Ordering API
+Ordering API is a microservice for managing orders.
 
 ## Setup
 docker-compose -f docker-compose.yaml up -d
@@ -19,5 +20,4 @@ docker run -d -p 80:8080 -v swagger.yaml:/tmp/swagger.yaml -e SWAGGER_FILE=tmp/s
     * [ ] Rest Exceptions
     * [ ] Tracking Rest Layer
     * [ ] Tracking Service Layer
-* [ ] Complete Swagger file
 * [ ] Document its feature and uses

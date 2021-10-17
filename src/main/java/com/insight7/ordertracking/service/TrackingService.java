@@ -2,9 +2,11 @@ package com.insight7.ordertracking.service;
 
 import com.insight7.ordertracking.controller.models.OrderResponse;
 import com.insight7.ordertracking.controller.models.TrackingResponse;
+import com.insight7.ordertracking.exception.NotFoundException;
 import com.insight7.ordertracking.persistence.models.Tracking;
 import com.insight7.ordertracking.persistence.repository.TrackingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.util.Pair;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,14 @@ public class TrackingService {
             response.setUpdateTime(tracking.getUpdateTime().toString());
         }
         return response;
+    }
+
+    public void deleteTrackingAndOrderById(@NonNull Integer orderId, @NonNull Integer trackingId) {
+        try {
+            repository.deleteById(trackingId);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new NotFoundException(String.format("Order not found for orderId = %d and trackingId", orderId, trackingId));
+        }
     }
 
 }
