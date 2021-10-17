@@ -82,6 +82,10 @@ public class OrderService {
         return orderToResponseModel(optionalOrder.get());
     }
 
+    public void updateOrder(@NonNull String orderId, String location, String message){
+
+    }
+
     public void deleteOrderById(@NonNull Integer orderId) {
         try {
             repository.deleteById(orderId);
